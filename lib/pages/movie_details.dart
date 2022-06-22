@@ -136,7 +136,7 @@ class _MovieDetailsState extends State<MovieDetails> {
                             children: [
                               Container(
                                 width: 270,
-                                child: Text("Uncharted 3: the new adventure of multiverse",
+                                child: Text(widget.title,
                                     // overflow: TextOverflow.ellipsis,
                                     softWrap: true,
                                     style: GoogleFonts.lato(
