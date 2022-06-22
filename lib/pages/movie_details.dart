@@ -1,4 +1,8 @@
+import 'dart:convert';
+
+import 'package:another_flushbar/flushbar.dart';
 import 'package:badges/badges.dart';
+import 'package:filmfan/api/movie_api_request.dart';
 import 'package:filmfan/pages/favorites/db_favorite_helper.dart';
 import 'package:filmfan/pages/favorites/favorite_provider.dart';
 import 'package:filmfan/utils/colors.dart';
@@ -27,6 +31,61 @@ class MovieDetails extends StatefulWidget {
 
 class _MovieDetailsState extends State<MovieDetails> {
   DbHelper? _dbHelper = DbHelper();
+
+  _voteMovie() async {
+    var data = {
+      'reference_code':widget.id,
+    };
+
+    var response = await HttpRequest().postData(data, widget.id +'/rating?api_key=9ea54d07626136e27875ff900d04b8c8&language=en-US&page=1');
+    var body = json.decode(response.body);
+
+    print(body);
+
+    if (response.statusCode == 200) {
+      //OTP Verification
+      setState(() {
+
+      });
+
+      Flushbar(
+        title: "Success",
+        message: "Movie is successful voted",
+        icon: Icon(
+          Icons.check_circle_outline,
+          size: 28.0,
+          color: Colors.white,
+        ),
+        duration: Duration(seconds: 5),
+        margin: EdgeInsets.all(10),
+        borderRadius: BorderRadius.circular(10),
+        flushbarPosition: FlushbarPosition.TOP,
+        flushbarStyle: FlushbarStyle.FLOATING,
+        reverseAnimationCurve: Curves.decelerate,
+        forwardAnimationCurve: Curves.elasticOut,
+        backgroundColor: Colors.green,
+      )..show(context);
+
+    } else {
+      Flushbar(
+        title: "Error",
+        message: body['status_message'],
+        icon: Icon(
+          Icons.close_rounded,
+          size: 28.0,
+          color: Colors.white,
+        ),
+        duration: Duration(seconds: 5),
+        margin: EdgeInsets.all(8),
+        borderRadius: BorderRadius.circular(8),
+        flushbarPosition: FlushbarPosition.TOP,
+        flushbarStyle: FlushbarStyle.FLOATING,
+        reverseAnimationCurve: Curves.decelerate,
+        forwardAnimationCurve: Curves.elasticOut,
+        backgroundColor: Colors.red,
+      )..show(context);
+    }
+  }
   @override
   Widget build(BuildContext context) {
 
@@ -253,7 +312,7 @@ class _MovieDetailsState extends State<MovieDetails> {
 
                 GestureDetector(
                   onTap: () {
-
+                    _voteMovie();
                   },
                   child: Container(
                     width: 150,
